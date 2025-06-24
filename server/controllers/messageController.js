@@ -80,8 +80,6 @@ export const sendMessage = async (req, res) => {
             image:imageUrl
         })
 
-        console.log({newMessage});
-
         //Emit the new message to the receiver's socket
         const receiverSocketId = userSocketMap[receiverId];
         if(receiverSocketId){
