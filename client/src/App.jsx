@@ -18,7 +18,7 @@ const App = () => {
   if (loading) return null;
 
   return (
-    <div className='bg-[url("./src/assets/bgWallPaper.webp")] bg-contain'>
+    <div className='bg-[url("/bgWallPaper.webp")] bg-contain'>
       <Toaster/>
       <Routes>
         <Route path='/' element={authUser ? <HomePage/> : <Navigate to={"/login"} replace/>}/>
