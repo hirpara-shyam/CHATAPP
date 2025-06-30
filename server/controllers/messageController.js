@@ -51,11 +51,15 @@ export const getMessages = async (req, res)=>{
 //Api to mark message as seen using message Id
 export const markMessageAsSeen = async (req, res)=>{
     try{
-        const {id} = req.params;
-        await Message.findByIdAndUpdate(id, {seen:true})
-        res.json({success:true})
+        const {id} = req.params.id;
+        const updatedMsg = await Message.findByIdAndUpdate(id, {seen:true});
+
+        if (!updatedMessage) {
+            return res.status(404).json({ success: false, message: "Message not found" });
+        }
+        res.json({success:true, message: "Marked as seen"})
     } catch(error){
-        console.log(error.message);
+        console.log("Error marking message seen:", error.message);
         res.json({success:false, message:error.message})
     }
 }
@@ -80,13 +84,15 @@ export const sendMessage = async (req, res) => {
             image:imageUrl
         })
 
+        const savedMessage = await newMessage.save(); 
+
         //Emit the new message to the receiver's socket
         const receiverSocketId = userSocketMap[receiverId];
         if(receiverSocketId){
-            io.to(receiverSocketId).emit("newMessage", newMessage)
+            io.to(receiverSocketId).emit("newMessage", savedMessage)
         }
 
-        res.json({success:true, newMessage});
+        res.json({success:true, newMessage: savedMessage});
      } catch(error){
         console.log(error.message);
         res.json({success:false, message:error.message})

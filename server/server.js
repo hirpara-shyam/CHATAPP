@@ -5,6 +5,7 @@ import http from "http";
 import { connectDB } from './lib/db.js';
 import userRouter from './routes/userRoutes.js';
 import messageRouter from './routes/messageRoutes.js';
+import chatRequestRouter from './routes/chatRequestRoutes.js';
 import { Server } from 'socket.io';
 
 // Express app and HTTP Server
@@ -42,6 +43,7 @@ app.use(cors());
 app.use("/api/status", (req, res)=>res.send("Server is live..."));
 app.use("/api/auth", userRouter);
 app.use("/api/messages", messageRouter);
+app.use("/api/chat-requests", chatRequestRouter);
 
 // Connect to mongodb
 await connectDB();

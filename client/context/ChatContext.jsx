@@ -1,5 +1,4 @@
 import { Children, createContext, useContext, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import toast from "react-hot-toast";
 
@@ -50,7 +49,7 @@ export const ChatProvider = ({children})=>{
                 toast.error(data.message);
             }
         } catch(error){
-            toast.error(data.message);
+            toast.error(error.message);
         }
     }
 
@@ -62,6 +61,7 @@ export const ChatProvider = ({children})=>{
             if (selectedUser && newMessage.senderId === selectedUser._id) {
                 newMessage.seen = true;
                 setMessages((prevMessages)=> [...prevMessages, newMessage]);
+                console.log("New Message", newMessage);
                 axios.put(`/api/messages/mark/${newMessage._id}`);
             }else{
                 setUnseenMessages((prevUnseenMessages)=>({

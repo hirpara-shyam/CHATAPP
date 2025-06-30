@@ -28,7 +28,11 @@ export const signup = async (req, res)=>{
 
         res.json({success:true, userData: newUser, token, message:"Account Created Successfully"})
     } catch(error){
-        console.log(error.message);
+        if (error.code === 11000) {
+            // Mongo duplicate key error
+            return res.json({success: false, message: "Email already exists"});
+        }
+        console.log("Signup error:", error.message);
         res.json({success:false, message:error.message})
     }
 }
@@ -36,8 +40,18 @@ export const signup = async (req, res)=>{
 //Login user
 export const login = async (req, res)=>{
     try{
+        console.log(req);
+
+        if (!req.body || !req.body.email || !req.body.password) {
+            return res.json({ success: false, message: "Email and password required" });
+        }
+
         const {email, password} = req.body;
-        const userData = await User.findOne({email})
+        const userData = await User.findOne({email});
+
+        if (!userData) {
+            return res.json({ success: false, message: "User not found" });
+        }
 
         const isPasswordCorrect = await bcrypt.compare(password, userData.password);
 
@@ -49,7 +63,7 @@ export const login = async (req, res)=>{
         
         res.json({success:true, userData, token, message:"Login Successful"})
     } catch(error){
-        console.log(error.message);
+        console.log("Login Error:", error.message);
         res.json({success:false, message:error.message})
     }
 }
@@ -78,5 +92,18 @@ export const updateProfile = async (req, res)=>{
     } catch(error){
         console.log(error.message);
         res.json({success:false, message:error.message })
+    }
+}
+
+//Get all users accept logged in user
+export const getAllUsers = async (req, res)=>{
+    try{
+        const userId = req.user._id;
+        const filteredUsers = await User.find({_id: {$ne: userId}}).select("-password");
+
+        res.json({success:true, users:filteredUsers})
+    } catch(error){
+        console.log(error.message);
+        res.json({success:false, message:error.message})
     }
 }

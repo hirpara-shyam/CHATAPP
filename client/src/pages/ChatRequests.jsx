@@ -7,12 +7,20 @@ import toast from "react-hot-toast";
 
 const ChatRequests = () => {
   const { axios, authUser } = useContext(AuthContext);
-  const [activeTab, setActiveTab] = useState("received");
+
+  const queryParams = new URLSearchParams(location.search);
+  const defaultTab = queryParams.get("tab") || "received";
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const [received, setReceived] = useState([]);
   const [sent, setSent] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    navigate(`/chat-requests?tab=${tab}`);
+  };
 
   const getRequests = async () => {
     const { data } = await axios.get("/api/chat-requests");
@@ -23,7 +31,7 @@ const ChatRequests = () => {
   };
 
   const getAllUsers = async () => {
-    const { data } = await axios.get("/api/messages/users");
+    const { data } = await axios.get("/api/auth/");
     
     if (data.success) {
       const filtered = data.users.filter((user) => user._id !== authUser._id);
@@ -72,8 +80,9 @@ const ChatRequests = () => {
   }, []);
 
   const renderRequests = (requests, type) => {
+    
     requests = requests.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
-
+    
     return requests.map((req) => {
       const user = type === "received" ? req.senderId : req.receiverId;
       const time = new Date(req.createdAt).toLocaleString("en-IN", {
@@ -135,7 +144,7 @@ const ChatRequests = () => {
         r.status === "accepted"
       );
 
-      if (isAccepted) console.log("Already connected with", user.fullName);
+      // if (isAccepted) console.log("Already connected with", user.fullName);
 
       // if (receivedReq && receivedReq.status === "pending" && (receivedReq.senderId._id || receivedReq.senderId) === user._id) {
       if (receivedReq?.status === "pending") {
@@ -190,21 +199,21 @@ const ChatRequests = () => {
 
   return (
     <div className="min-h-screen bg-cover bg-no-repeat flex items-center justify-center px-5 py-10 sm:px-[15%]">
-      <div className="w-5/6 max-w-2xl h-[80vh] text-gray-300 rounded-lg overflow-hidden border-2 border-gray-600 shadow-xl backdrop-blur-2xl items-center justify-between max-sm:flex-col-reverse">
+      <div className="w-5/6 max-w-2xl h-[80vh] flex flex-col text-gray-300 rounded-lg overflow-hidden border-2 border-gray-600 shadow-xl backdrop-blur-2xl">
         <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-600">
-          {/* <img src={assets.back_arrow_icon} onClick={() => navigate("/")} className="w-5 cursor-pointer" /> */}
-          <span onClick={() => navigate("/")} className="cursor-pointer text-lg font-semibold">&#8592;</span>
+          <img src={assets.arrow_icon} onClick={() => navigate("/")} className="w-5 cursor-pointer" />
+          {/* <span onClick={() => navigate("/")} className="cursor-pointer text-lg font-semibold">&#8592;</span> */}
           <h2 className="text-xl font-semibold">QuickChat</h2>
         </div>
 
         <div className="flex justify-center gap-10 border-b border-gray-600 py-3">
-          <button onClick={() => setActiveTab("received")} className={`text-lg pb-1 ${activeTab === "received" ? "border-b-2 border-white" : "text-gray-400"}`}>
+          <button onClick={() => handleTabChange("received")} className={`text-lg pb-1 ${activeTab === "received" ? "border-b-2 border-white" : "text-gray-400"}`}>
             Received
           </button>
-          <button onClick={() => setActiveTab("sent")} className={`text-lg pb-1 ${activeTab === "sent" ? "border-b-2 border-white" : "text-gray-400"}`}>
+          <button onClick={() => handleTabChange("sent")} className={`text-lg pb-1 ${activeTab === "sent" ? "border-b-2 border-white" : "text-gray-400"}`}>
             Sent
           </button>
-          <button onClick={() => setActiveTab("all")} className={`text-sm pb-1 ${activeTab === "all" ? "border-b-2 border-white" : "text-gray-400"}`}>
+          <button onClick={() => handleTabChange("all")} className={`text-sm pb-1 ${activeTab === "all" ? "border-b-2 border-white" : "text-gray-400"}`}>
             All Users
           </button>
         </div>
@@ -221,7 +230,8 @@ const ChatRequests = () => {
           </div>
         )}
 
-        <div className="overflow-y-auto h-[calc(100%-130px)] custom-scrollbar">
+        {/* <div className="overflow-y-auto h-[calc(100%-130px)] custom-scrollbar"> */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar px-4">
           {activeTab === "received" 
           ? renderRequests(received, "received") 
           : activeTab === "sent" 

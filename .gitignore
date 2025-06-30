@@ -1,3 +1,2 @@
 # ignore all the environment files for security
-.env
 **/.env

@@ -10,9 +10,19 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children })=>{
     const [token, setToken] = useState(localStorage.getItem("token"));
-    const [authUser, setAuthUser] = useState(null);
+    const [authUser, setAuthUser] = useState(() => {
+        const storedUser = localStorage.getItem("authUser");
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
+
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [socket, setSocket] = useState(null);
+
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setLoading(false); // Done after setting initial authUser
+    }, []);
 
     //Check if user is authorized and if so, set the user data and connect the socket
     const checkAuth = async ()=>{
@@ -33,6 +43,7 @@ export const AuthProvider = ({ children })=>{
             const { data } = await axios.post(`/api/auth/${state}`, credentials);
             if(data.success){
                 setAuthUser(data.userData);
+                localStorage.setItem("authUser", JSON.stringify(data.userData)); 
                 connectSocket(data.userData);
                 axios.defaults.headers.common["token"] = data.token;
                 setToken(data.token);
@@ -51,6 +62,7 @@ export const AuthProvider = ({ children })=>{
         localStorage.removeItem("token");
         setToken(null);
         setAuthUser(null);
+        localStorage.removeItem("authUser");
         setOnlineUsers([]);
         axios.defaults.headers.common["token"] = null;
         toast.success("Logged out successfully")
@@ -100,7 +112,8 @@ export const AuthProvider = ({ children })=>{
         socket,
         login,
         logout,
-        updateProfile
+        updateProfile,
+        loading
     }
 
     return (
