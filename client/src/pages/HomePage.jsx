@@ -24,7 +24,7 @@ const HomePage = () => {
                 {/* Mobile Layout */}
                 {!selectedUser && <Sidebar />}
                 {selectedUser && !showRightSidebar && (
-                  <ChatContainer onToggleSidebar={() => setShowRightSidebar(true)} />
+                  <ChatContainer className="pt-[calc(env(safe-area-inset-top, 16px))]" onToggleSidebar={() => setShowRightSidebar(true)} />
                 )}
                 {selectedUser && showRightSidebar && (
                   <RightSidebar onBack={() => setShowRightSidebar(false)} />
