@@ -82,7 +82,7 @@ const Sidebar = () => {
                         <div ref={menuRef} className='relative py-2 group'>
                             <img src={assets.menu_icon} alt='Menu' onClick={() => setMenuOpen(prev => !prev)} className='max-h-5 cursor-pointer z-30 relative'/>
                             <div className={`absolute top-full right-0 z-20 w-33 p-5 rounded-md bg-[#282142] border border-gray-600 text-gray-100 ${menuOpen ? 'block' : 'hidden'} group-hover:block `}>
-                                <p onClick={()=>navigate('/chat-requests?tab="received"')} className='cursor-pointer text-sm whitespace-nowrap'>Chat Requests</p> 
+                                <p onClick={()=>navigate('/chat-requests?tab=received')} className='cursor-pointer text-sm whitespace-nowrap'>Chat Requests</p> 
                                 <hr className='my-2 border-t border-gray-500'/>
                                 <p onClick={()=>navigate('/profile')} className='cursor-pointer text-sm'>Edit Profile</p>
                                 <hr className='my-2 border-t border-gray-500'/>
