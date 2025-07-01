@@ -199,7 +199,7 @@ const ChatRequests = () => {
 
   return (
     <div className="min-h-screen bg-cover bg-no-repeat flex items-center justify-center px-5 py-10 sm:px-[15%]">
-      <div className="w-5/6 max-w-2xl h-[80vh] flex flex-col text-gray-300 rounded-lg overflow-hidden border-2 border-gray-600 shadow-xl backdrop-blur-2xl">
+      <div className="w-7/6 max-w-2xl h-[80vh] flex flex-col text-gray-300 rounded-lg overflow-hidden border-2 border-gray-600 shadow-xl backdrop-blur-2xl">
         <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-600">
           <img src={assets.arrow_icon} onClick={() => navigate("/")} className="w-5 cursor-pointer" />
           {/* <span onClick={() => navigate("/")} className="cursor-pointer text-lg font-semibold">&#8592;</span> */}

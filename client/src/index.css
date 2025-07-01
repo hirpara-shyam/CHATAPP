@@ -6,6 +6,13 @@
     font-family: "Outfit", sans-serif;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
 ::-webkit-scrollbar{
     display: none;
 }

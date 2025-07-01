@@ -11,8 +11,8 @@ const HomePage = () => {
     const isMobile = window.innerWidth < 768;
 
   return (
-    <div className='border w-full h-screen items-center justify-center sm:px-[15%] sm:py-[5%]'>
-        <div className={`w-full h-full backdrop-blur-xl border-2 border-gray-600 rounded-2xl grid grid-cols-1 overflow-hidden relative 
+    <div className={`border w-full h-screen items-center justify-center sm:px-[15%] sm:py-[5%]`}>
+        <div className={`w-full h-[92vh] mt-14 backdrop-blur-xl border-2 border-gray-600 rounded-2xl grid grid-cols-1 overflow-hidden relative 
         ${selectedUser 
           ? (showRightSidebar 
                       ? 'md:grid-cols-[1fr_1.5fr_1fr]' 
@@ -24,7 +24,7 @@ const HomePage = () => {
                 {/* Mobile Layout */}
                 {!selectedUser && <Sidebar />}
                 {selectedUser && !showRightSidebar && (
-                  <ChatContainer className="pt-[env(safe-area-inset-top)]" onToggleSidebar={() => setShowRightSidebar(true)} />
+                  <ChatContainer onToggleSidebar={() => setShowRightSidebar(true)} />
                 )}
                 {selectedUser && showRightSidebar && (
                   <RightSidebar onBack={() => setShowRightSidebar(false)} />
