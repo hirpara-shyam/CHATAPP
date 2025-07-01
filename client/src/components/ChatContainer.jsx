@@ -84,6 +84,7 @@ const ChatContainer = ({ onToggleSidebar }) => {
 
                 {msg.image ? (
                   <img
+                    onClick={()=>window.open(msg.image)}
                     src={msg.image}
                     alt=""
                     className="max-w-[150px] border border-gray-700 rounded-lg overflow-hidden"
